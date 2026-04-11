@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head><title>COG Test</title></head>
+<body style="background:#000;color:#fff;font-family:monospace;padding:20px;">
+<h2>COG Ingest Test</h2>
+<button onclick="runTest()" style="padding:10px 20px;font-size:16px;cursor:pointer;">Fire Test Packet</button>
+<pre id="result" style="margin-top:20px;color:#4ECDC4;"></pre>
+
+<script>
+async function runTest() {
+  document.getElementById('result').textContent = 'Sending...';
+  try {
+    const res = await fetch('https://coglife-production.up.railway.app/api/ingest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        session_token: 'test_' + Date.now(),
+        cognitive_profile: {
+          convergent: 0.2,
+          divergent: 0.2,
+          systems: 0.15,
+          pattern_first: 0.2,
+          adaptive: 0.1,
+          multi_domain_convergent: 0.15
+        },
+        syntax_markers: {
+          caps_usage: 0.4,
+          compression_ratio: 0.7,
+          fragmentation_score: 0.6,
+          humor_present: true
+        },
+        condition_flags: {
+          energy_level: 'high',
+          flatline: false,
+          pre_breakthrough: true,
+          stuck: false
+        },
+        transmission_timestamp: new Date().toISOString()
+      })
+    });
+    const data = await res.json();
+    document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+  } catch (err) {
+    document.getElementById('result').textContent = 'Error: ' + err.message;
+  }
+}
+</script>
+</body>
+</html>
